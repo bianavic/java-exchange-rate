@@ -1,10 +1,12 @@
 package org.edu.fabs.formacaojavadesafiopadraoprojeto.controller;
 
+import com.google.gson.Gson;
 import feign.FeignException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.edu.fabs.formacaojavadesafiopadraoprojeto.feign.ExchangeFeignClient;
 import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.CurrencySymbol;
+import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.ExchangeRateResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +33,10 @@ public class ExchangeController {
             @PathVariable("target_code") CurrencySymbol target_code,
             @PathVariable("amount") BigDecimal amount) {
         try {
-            String response = exchangeFeignClient.getAmountConversion(base_code.getName(),target_code.getName(), amount.setScale(2, RoundingMode.HALF_EVEN)).toString();
-            return ResponseEntity.ok(response);
+            String response = exchangeFeignClient.getAmountConversion(base_code.getName(),target_code.getName(), amount.setScale(2, RoundingMode.HALF_EVEN));
+            Gson gson = new Gson();
+            ExchangeRateResponse exchangeRateResponse = gson.fromJson(response, ExchangeRateResponse.class);
+            return ResponseEntity.ok(gson.toJson(exchangeRateResponse));
         } catch (FeignException e) {
             return ResponseEntity.status(e.status()).body(null);
         }
@@ -44,9 +48,11 @@ public class ExchangeController {
             @PathVariable("target_code") CurrencySymbol target_code) {
         try {
             String response = exchangeFeignClient.getPairConversion(base_code, target_code);
-            return ResponseEntity.ok(response);
+            Gson gson = new Gson();
+            ExchangeRateResponse exchangeRateResponse = gson.fromJson(response, ExchangeRateResponse.class);
+            return ResponseEntity.ok(gson.toJson(exchangeRateResponse));
         } catch (FeignException e) {
-            return ResponseEntity.status(e.status()).body(null);
+            return null;
         }
     }
 
