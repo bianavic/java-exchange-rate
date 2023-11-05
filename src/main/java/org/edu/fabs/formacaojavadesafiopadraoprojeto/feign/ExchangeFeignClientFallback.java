@@ -9,7 +9,7 @@ public class ExchangeFeignClientFallback implements ExchangeFeignClient {
 
     @Override
     public String getSupportedCurrencies(String code) {
-        return null;
+        return code;
     }
 
     @Override

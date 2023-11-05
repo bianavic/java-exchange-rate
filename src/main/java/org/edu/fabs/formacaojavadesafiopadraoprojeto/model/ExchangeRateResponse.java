@@ -33,15 +33,4 @@ public class ExchangeRateResponse {
         this.target_code = CurrencySymbol.valueOf(target_code.toUpperCase());
     }
 
-    @Override
-    public String toString() {
-        return "ExchangeRateResponse{" +
-                ", base_code=" + base_code +
-                ", target_code=" + target_code +
-                ", conversion_rate=" + conversion_rate +
-                ", conversion_result=" + conversion_result +
-                ", time_last_update_utc=" + time_last_update_utc +
-                '}';
-    }
-
 }
