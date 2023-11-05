@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 @JsonPropertyOrder({"base_code", "target_code", "conversion_rate", "conversion_result", "time_last_update_utc"})
 public class ExchangeRateResponse {
 
-    private LocalDateTime localDateTime;
-
     @JsonProperty("base_code")
     @Enumerated(EnumType.STRING)
     private CurrencySymbol base_code;
@@ -34,17 +32,11 @@ public class ExchangeRateResponse {
     @JsonProperty("time_last_update_utc")
     private LocalDateTime time_last_update_utc;
 
+    private LocalDateTime localDateTime = LocalDateTime.now();
+
     public ExchangeRateResponse(CurrencySymbol base_code, CurrencySymbol target_code) {
         this.base_code = base_code;
         this.target_code = target_code;
-    }
-
-    public ExchangeRateResponse(CurrencySymbol base_code, CurrencySymbol target_code, BigDecimal conversion_rate, BigDecimal conversion_result, LocalDateTime time_last_update_utc) {
-        this.base_code = getBase_code();
-        this.target_code = getTarget_code();
-        this.conversion_rate = getConversion_rate();
-        this.conversion_result = getConversion_result();
-        this.time_last_update_utc = getTime_last_update_utc();
     }
 
     public ExchangeRateResponse(String base_code, String target_code, BigDecimal amount) {
