@@ -1,4 +1,5 @@
-# Formacao Java - Desafio Padrao de Projeto (tema livre)
+# Java RestAPI - Api for foreign exchange rates and currency conversion
+
 Patterns: Singleton, Strategy, Facade
 
 <p align="">
@@ -24,7 +25,7 @@ Patterns: Singleton, Strategy, Facade
 
 
 ## Exchange Rate Conversion
-Currency Conversion System and Calculation of the Total Price of a Product Based on the Selected Currency
+Currency Conversion System and Calculation of the Total Price of a Product Depending on the Chosen Currency
 - supported currencies: ARS, BRL, EUR, GBP, JPY, USD
 
 ### external api: get your api-key
@@ -36,13 +37,13 @@ Currency Conversion System and Calculation of the Total Price of a Product Based
 clone
 
 ```bash
-  git clone git@github.com:bianavic/formacao-java-desafio-padrao-projeto.git
+  git clone git@github.com:bianavic/java-exchange-rate.git
 ```
 
 access
 
 ```bash
-  cd formacao-java-desafio-padrao-projeto
+  cd java-exchange-rate
 ```
 ps: before executing this project, make sure you configure your api key at application.properties file like the example above
 

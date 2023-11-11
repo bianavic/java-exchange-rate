@@ -15,9 +15,9 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info().title("Rest API")
-                        .contact(new io.swagger.v3.oas.models.info.Contact().name("Exemplo").email("exemplo@email.com"))
-                        .description("API - desafio aplicando conceitos de padroes de projeto")
-                        .version("1.0")
+                        .contact(new io.swagger.v3.oas.models.info.Contact().name("Fabi").email("exemplo@email.com"))
+                        .description("API - Currency Converter")
+                        .version("0.0.1")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))
                 .externalDocs(new ExternalDocumentation());
     }
