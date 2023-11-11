@@ -1,4 +1,4 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.config;
+package org.edu.fabs.exchangerate.config;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

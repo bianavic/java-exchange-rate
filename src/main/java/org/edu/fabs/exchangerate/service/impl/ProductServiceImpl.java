@@ -1,14 +1,14 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.service.impl;
+package org.edu.fabs.exchangerate.service.impl;
 
 import com.google.gson.Gson;
 import feign.FeignException;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.feign.ExchangeFeignClient;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.handler.BusinessException;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.CurrencySymbol;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.ExchangeRateResponse;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.Product;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.repository.ProductRepository;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.service.ProductService;
+import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
+import org.edu.fabs.exchangerate.handler.BusinessException;
+import org.edu.fabs.exchangerate.model.CurrencySymbol;
+import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
+import org.edu.fabs.exchangerate.model.Product;
+import org.edu.fabs.exchangerate.repository.ProductRepository;
+import org.edu.fabs.exchangerate.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

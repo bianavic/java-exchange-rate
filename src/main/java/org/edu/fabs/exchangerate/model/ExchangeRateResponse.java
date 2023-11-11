@@ -1,4 +1,4 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.model;
+package org.edu.fabs.exchangerate.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;

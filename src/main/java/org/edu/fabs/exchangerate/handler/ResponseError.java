@@ -1,4 +1,4 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.handler;
+package org.edu.fabs.exchangerate.handler;
 
 import lombok.Setter;
 

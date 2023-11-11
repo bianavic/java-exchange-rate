@@ -1,6 +1,6 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.feign;
+package org.edu.fabs.exchangerate.feign;
 
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.CurrencySymbol;
+import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

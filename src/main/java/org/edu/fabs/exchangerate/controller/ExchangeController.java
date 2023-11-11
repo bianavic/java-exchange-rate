@@ -1,12 +1,12 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.controller;
+package org.edu.fabs.exchangerate.controller;
 
 import com.google.gson.Gson;
 import feign.FeignException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.feign.ExchangeFeignClient;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.CurrencySymbol;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.ExchangeRateResponse;
+import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
+import org.edu.fabs.exchangerate.model.CurrencySymbol;
+import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

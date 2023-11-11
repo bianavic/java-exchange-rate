@@ -1,7 +1,7 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.service;
+package org.edu.fabs.exchangerate.service;
 
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.CurrencySymbol;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.Product;
+import org.edu.fabs.exchangerate.model.CurrencySymbol;
+import org.edu.fabs.exchangerate.model.Product;
 
 import java.math.BigDecimal;
 import java.util.Optional;

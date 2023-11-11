@@ -1,6 +1,6 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.repository;
+package org.edu.fabs.exchangerate.repository;
 
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.ExchangeRate;
+import org.edu.fabs.exchangerate.model.ExchangeRate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ExchangeRepository extends JpaRepository<ExchangeRate, Long> {}

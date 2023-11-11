@@ -1,10 +1,10 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto;
+package org.edu.fabs.exchangerate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FormacaoJavaDesafioPadraoProjetoApplicationTests {
+class MainTests {
 
 	@Test
 	void contextLoads() {

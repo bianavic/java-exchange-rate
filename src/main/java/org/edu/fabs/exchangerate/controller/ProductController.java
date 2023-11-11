@@ -1,11 +1,11 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.controller;
+package org.edu.fabs.exchangerate.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.handler.ResourceNotFoundException;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.CurrencySymbol;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.model.Product;
-import org.edu.fabs.formacaojavadesafiopadraoprojeto.service.ProductService;
+import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
+import org.edu.fabs.exchangerate.model.CurrencySymbol;
+import org.edu.fabs.exchangerate.model.Product;
+import org.edu.fabs.exchangerate.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package org.edu.fabs.formacaojavadesafiopadraoprojeto.model;
+package org.edu.fabs.exchangerate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
