@@ -10,8 +10,8 @@ public interface ProductService {
 
     Iterable<Product> getAll();
     Optional<Product> getById(Long id);
-    void addProduct(Product product);
-    void updateProduct(Long id, Product product);
+    Product addProduct(Product product);
+    Product updateProduct(Long id, Product productToUpdate);
     void deleteProduct(Long id);
     BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency);
 

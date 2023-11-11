@@ -1,5 +1,6 @@
 package org.edu.fabs.exchangerate.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +29,7 @@ public class Product {
     private String name;
     private String description;
     private Integer quantity;
+    @Column(precision = 13, scale = 2)
     private BigDecimal price;
     private CurrencySymbol currency;
 

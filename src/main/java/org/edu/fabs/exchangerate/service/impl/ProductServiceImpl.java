@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import feign.FeignException;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.handler.BusinessException;
+import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.Product;
@@ -38,19 +39,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(Product product) {
-        productRepository.save(product);
+    public Product addProduct(Product newProduct) {
+        return productRepository.save(newProduct);
     }
 
     @Override
-    public void updateProduct(Long id, Product product) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
+    public Product updateProduct(Long id, Product productToUpdate) {
+
+        Optional<Product> optionalProduct = this.productRepository.findById(id);
+
         if (optionalProduct.isPresent()) {
-            product.setName(product.getName());
-            product.setDescription(product.getDescription());
-            product.setQuantity(product.getQuantity());
-            product.setPrice(product.getPrice());
-            productRepository.save(product);
+            Product productDB = optionalProduct.get();
+            productDB.setQuantity(productToUpdate.getQuantity());
+            productDB.setPrice(productToUpdate.getPrice());
+            productDB.setCurrency(productToUpdate.getCurrency());
+            return this.productRepository.save(productDB);
+        } else {
+            throw new ResourceNotFoundException("Product not found");
         }
     }
 
