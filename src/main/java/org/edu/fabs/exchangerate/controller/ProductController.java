@@ -7,12 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.edu.fabs.exchangerate.dto.ProductDTO;
 import org.edu.fabs.exchangerate.dto.ProductUpdateDTO;
-import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
+import org.edu.fabs.exchangerate.handler.NotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.service.ProductService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,7 +81,7 @@ public class ProductController {
 
     @GetMapping("/{id}/totalPrice/{targetCurrency}")
     public ResponseEntity<BigDecimal> getTotalPrice(@PathVariable Long id, @PathVariable CurrencySymbol targetCurrency) {
-        Product product = productService.getById(id).orElseThrow(() -> new ResourceNotFoundException("product"));
+        Product product = productService.getById(id).orElseThrow();
         BigDecimal totalPrice = productService.calculateTotalPrice(product, targetCurrency);
         return ResponseEntity.ok(totalPrice);
     }

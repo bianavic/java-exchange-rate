@@ -23,6 +23,13 @@ Patterns: Singleton, Strategy, Facade
     </a>
 </p>
 
+## About this application
+
+When the customer adds a product, all information, including the currency, is saved in the database.
+
+This API is for consultation only; selecting the currency at the time of the inquiry does not alter the information in the database. To change the currency of your product's price, an update is required.
+
+However, this application also allows you to check the current exchange rate based on the available currencies, data sourced from the exchange-rate API.
 
 ## Exchange Rate Conversion
 Currency Conversion System and Calculation of the Total Price of a Product Depending on the Chosen Currency

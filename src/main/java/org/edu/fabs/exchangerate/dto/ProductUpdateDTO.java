@@ -5,9 +5,10 @@ import org.edu.fabs.exchangerate.model.Product;
 
 import java.math.BigDecimal;
 
-public record ProductUpdateDTO(Integer quantity,
-                               BigDecimal price,
-                               CurrencySymbol currency) {
+public record ProductUpdateDTO(
+        Integer quantity,
+        BigDecimal price,
+        CurrencySymbol currency) {
 
     public ProductUpdateDTO(Product model) {
         this(model.getQuantity(), model.getPrice(), model.getCurrency());

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import feign.FeignException;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.handler.BusinessException;
-import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.Product;
@@ -12,6 +11,7 @@ import org.edu.fabs.exchangerate.repository.ProductRepository;
 import org.edu.fabs.exchangerate.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -28,21 +28,25 @@ public class ProductServiceImpl implements ProductService {
         this.exchangeFeignClient = exchangeFeignClient;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Iterable<Product> getAll() {
         return productRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Product> getById(Long id) {
         return productRepository.findById(id);
     }
 
+    @Transactional
     @Override
     public Product addProduct(Product newProduct) {
         return productRepository.save(newProduct);
     }
 
+    @Transactional
     @Override
     public Product updateProduct(Long id, Product productToUpdate) {
 
@@ -55,10 +59,11 @@ public class ProductServiceImpl implements ProductService {
             productDB.setCurrency(productToUpdate.getCurrency());
             return this.productRepository.save(productDB);
         } else {
-            throw new ResourceNotFoundException("Product not found");
+            throw new BusinessException("product not found");
         }
     }
 
+    @Transactional
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
@@ -72,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
             ExchangeRateResponse exchangeRateResponse = gson.fromJson(response, ExchangeRateResponse.class);
             conversionRate = exchangeRateResponse.getConversion_rate();
         } catch (FeignException e) {
-            throw new BusinessException("failed to get exchange rate", e);
+            throw new BusinessException("failed to get exchange rate");
         }
         return product.getPrice().multiply(new BigDecimal(product.getQuantity())).multiply(conversionRate);
     }
