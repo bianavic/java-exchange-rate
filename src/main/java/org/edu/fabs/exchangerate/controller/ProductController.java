@@ -12,6 +12,7 @@ import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @CrossOrigin
     @GetMapping
     @Operation(summary = "Get all products", description = "Retrieve a list of all registered products")
     @ApiResponses(value = {
@@ -43,6 +45,7 @@ public class ProductController {
             return ResponseEntity.ok(productService.getAll());
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     @Operation(summary = "Get a product by ID", description = "Retrieve a specific product based on its ID")
     @ApiResponses(value = {
@@ -53,6 +56,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getById(id));
     }
 
+    @CrossOrigin
     @PostMapping
     @Operation(summary = "Add a new product", description = "Add a new product and return the created product's data")
     @ApiResponses(value = {
@@ -67,18 +71,21 @@ public class ProductController {
         return ResponseEntity.created(location).body(new ProductDTO(newProduct));
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<ProductUpdateDTO> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateDTO productToUpdate) {
         Product productUpdated = productService.updateProduct(id, productToUpdate.toModel());
         return ResponseEntity.ok(new ProductUpdateDTO(productUpdated));
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok().build();
     }
 
+    @CrossOrigin
     @GetMapping("/{id}/totalPrice/{targetCurrency}")
     public ResponseEntity<BigDecimal> getTotalPrice(@PathVariable Long id, @PathVariable CurrencySymbol targetCurrency) {
         Product product = productService.getById(id).orElseThrow();

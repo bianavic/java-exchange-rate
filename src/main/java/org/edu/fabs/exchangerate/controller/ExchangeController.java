@@ -8,6 +8,7 @@ import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,11 +23,13 @@ public class ExchangeController {
 
     private final ExchangeFeignClient exchangeFeignClient;
 
+    @CrossOrigin
     @GetMapping("latest/{baseCode}")
     public String getLatest(@PathVariable("baseCode") String baseCode) {
         return exchangeFeignClient.getSupportedCurrencies(baseCode);
     }
 
+    @CrossOrigin
     @GetMapping("pair/{base_code}/{target_code}/{amount}")
     public ResponseEntity<String> exchangeAmount(
             @PathVariable("base_code") CurrencySymbol base_code,
@@ -42,6 +45,7 @@ public class ExchangeController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("pair/{base_code}/{target_code}")
     public ResponseEntity<String> exchangePair(
             @PathVariable("base_code") CurrencySymbol base_code,
