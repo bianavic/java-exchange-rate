@@ -2,6 +2,9 @@ package org.edu.fabs.exchangerate.controller;
 
 import com.google.gson.Gson;
 import feign.FeignException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
@@ -23,12 +26,20 @@ public class ExchangeController {
 
     private final ExchangeFeignClient exchangeFeignClient;
 
+    @Operation(summary = "Get a list of exchange rates", description = "exchange rates from your base code to all the other currencies supported by exchange rate api")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful")
+    })
     @CrossOrigin
     @GetMapping("latest/{baseCode}")
     public String getLatest(@PathVariable("baseCode") String baseCode) {
         return exchangeFeignClient.getSupportedCurrencies(baseCode);
     }
 
+    @Operation(summary = "Get exchange rate between the codes and the conversion of the optional amount", description = "the exchange rate from your base code to the target currency you supplied, as well as a conversion of the amount you supplied")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful")
+    })
     @CrossOrigin
     @GetMapping("pair/{base_code}/{target_code}/{amount}")
     public ResponseEntity<String> exchangeAmount(
@@ -45,6 +56,10 @@ public class ExchangeController {
         }
     }
 
+    @Operation(summary = "Get exchange rate from your base code to the other currency you supplied", description = "Get  exchange rate from your base code to the other currency you supplied")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful")
+    })
     @CrossOrigin
     @GetMapping("pair/{base_code}/{target_code}")
     public ResponseEntity<String> exchangePair(

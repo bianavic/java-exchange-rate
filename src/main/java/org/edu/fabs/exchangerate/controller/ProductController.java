@@ -72,12 +72,20 @@ public class ProductController {
     }
 
     @CrossOrigin
+    @Operation(summary = "Update product information", description = "Update a product quantity, price and currency by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<ProductUpdateDTO> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateDTO productToUpdate) {
         Product productUpdated = productService.updateProduct(id, productToUpdate.toModel());
         return ResponseEntity.ok(new ProductUpdateDTO(productUpdated));
     }
 
+    @Operation(summary = "Delete a product information", description = "Remove a product by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful")
+    })
     @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
@@ -85,6 +93,10 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Get product total price converted to a chosen currency", description = "Get total price of your registered product converted to another coin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation successful")
+    })
     @CrossOrigin
     @GetMapping("/{id}/totalPrice/{targetCurrency}")
     public ResponseEntity<BigDecimal> getTotalPrice(@PathVariable Long id, @PathVariable CurrencySymbol targetCurrency) {
