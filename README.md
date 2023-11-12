@@ -25,21 +25,32 @@ Patterns: Singleton, Strategy, Facade
 
 ## About this application
 
+#### Currency Conversion System and Calculation of the Total Price of a Product Depending on the Chosen Currency
+- supported currencies: ARS, BRL, EUR, GBP, JPY, USD
+
+
+
 When the customer adds a product, all information, including the currency, is saved in the database.
 
 This API is for consultation only; selecting the currency at the time of the inquiry does not alter the information in the database. To change the currency of your product's price, an update is required.
 
 However, this application also allows you to check the current exchange rate based on the available currencies, data sourced from the exchange-rate API.
 
-## Exchange Rate Conversion
-Currency Conversion System and Calculation of the Total Price of a Product Depending on the Chosen Currency
-- supported currencies: ARS, BRL, EUR, GBP, JPY, USD
 
-### external api: get your api-key
+> ### Ready to Access and Test
+> https://exchange-rate.up.railway.app/swagger-ui/index.html
+---
+
+### Integrations
+#### [Exchangerate-API] Third-part API
 - [API Documentation](https://www.exchangerate-api.com/docs/overview)
 - [API Registration](https://app.exchangerate-api.com/sign-up) : get key
 
-### How To
+#### [Railway Platform]  Cloud/CI/Deploy
+- [Railway Documentation](https://railway.app/)
+
+---
+## How To
 
 clone
 
@@ -52,7 +63,7 @@ access
 ```bash
   cd java-exchange-rate
 ```
-ps: before executing this project, make sure you configure your api key at application.properties file like the example above
+ps: before executing this project, make sure you configure your api key at application.properties file
 
 ![api key configuration](assets/api-key.png "api key configuration")
 
@@ -61,6 +72,7 @@ execute
 ./gradlew bootrun
 ```
 
+---
 ### Exchange Rate Endpoints
 
 #### standard conversion
@@ -145,6 +157,7 @@ curl -X 'GET' \
 {"base_code":"BRL","target_code":"USD","conversion_rate":0.2024,"conversion_result":202.4,"time_last_update_utc":"Sun, 05 Nov 2023 00:00:01 +0000"}
 ```
 
+---
 ### Product Endpoints
 
 #### add a product
@@ -242,9 +255,6 @@ curl -X 'PUT' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "id": 2,
-  "name": "update product 2",
-  "description": "description 2",
   "quantity": 100,
   "price": 99.99,
   "currency": "USD"
@@ -253,9 +263,6 @@ curl -X 'PUT' \
 
 | Parameter     | Type         | Description                                               |
 |:--------------|:-------------|:----------------------------------------------------------|
-| `id`          | `Long`       | **NOT Required**. product id                              |
-| `name`        | `String`     | **Required**. product name                                |
-| `description` | `String`     | **Required**. product description                         |
 | `quantity`    | `Integer`    | **Required**. product quantity                            |
 | `price`       | `BigDecimal` | **Required**. product price                               |
 | `currency`    | `BigDecimal` | **Required**. product currency will not be converted here |
@@ -264,9 +271,6 @@ curl -X 'PUT' \
 
 ``` json
 {
-  "id": 2,
-  "name": "update product 2",
-  "description": "description 2",
   "quantity": 100,
   "price": 99.99,
   "currency": "USD"
@@ -285,13 +289,12 @@ curl -X 'DELETE' \
 #### convert total product price to supported currency
 
 ```bash
-curl -X 'PUT' \
 curl -X 'GET' \
   'http://localhost:8282/products/1/totalPrice/BRL' \
   -H 'accept: */*'
   ```
 
-| PathParameter    | Type         | Description                   |
+| Parameter    | Type         | Description                   |
 |:-----------------|:-------------|:------------------------------|
 | `id`             | `Long`       | **Required**. product id      |
 | `targetCurrency` | `String`     | **Required**. currency symbol |
@@ -302,6 +305,6 @@ curl -X 'GET' \
 4941.7
 ```
 
-## swagger documentation
-while running this application, you can test and visualize at:
+## Swagger Documentation
+when running this application, you can test and visualize at:
 [Documentação do Swagger](http://localhost:8282/swagger-ui/index.html)
