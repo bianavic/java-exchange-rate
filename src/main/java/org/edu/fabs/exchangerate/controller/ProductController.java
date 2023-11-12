@@ -72,7 +72,7 @@ public class ProductController {
     }
 
     @CrossOrigin
-    @Operation(summary = "Update product information", description = "Update a product quantity, price and currency by ID")
+    @Operation(summary = "Update product information by ID", description = "Update a product quantity, price and currency by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operation successful")
     })
@@ -82,7 +82,7 @@ public class ProductController {
         return ResponseEntity.ok(new ProductUpdateDTO(productUpdated));
     }
 
-    @Operation(summary = "Delete a product information", description = "Remove a product by ID")
+    @Operation(summary = "Delete a product by ID", description = "Remove a product by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operation successful")
     })
