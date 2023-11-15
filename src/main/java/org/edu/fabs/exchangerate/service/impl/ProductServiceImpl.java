@@ -75,7 +75,14 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isPresent()) {
+            productRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException(id);
+        }
+
     }
 
     public BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency) {

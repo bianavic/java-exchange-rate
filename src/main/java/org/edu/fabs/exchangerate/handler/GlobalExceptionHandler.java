@@ -10,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -84,5 +83,10 @@ public class GlobalExceptionHandler extends RuntimeException {
 //    public ResponseEntity<String> handleResourceAlreadyExists(ResourceAlreadyExistsException ex) {
 //        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
 //    }
+
+    @ExceptionHandler(value = { ResourceNotFoundException.class })
+    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
 }
