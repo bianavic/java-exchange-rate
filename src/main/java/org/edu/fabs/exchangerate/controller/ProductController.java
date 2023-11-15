@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.edu.fabs.exchangerate.dto.ProductDTO;
 import org.edu.fabs.exchangerate.dto.ProductUpdateDTO;
-import org.edu.fabs.exchangerate.handler.NotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
 
-@Tag(name = "Product Controller", description = "REST API for managing products.")
+@Tag(name = "Product Controller", description = "RESTFul API for managing products.")
 @RestController
 @RequestMapping("products")
 @RequiredArgsConstructor
@@ -48,9 +48,9 @@ public class ProductController {
     @CrossOrigin
     @GetMapping("/{id}")
     @Operation(summary = "Get a product by ID", description = "Retrieve a specific product based on its ID")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Operation successful"),
-//            @ApiResponse(responseCode = "404", description = "Product not found")
+            @ApiResponse(responseCode = "404", description = "The requested resource was not found")
     })
     public ResponseEntity<Optional<Product>> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getById(id));
@@ -59,11 +59,11 @@ public class ProductController {
     @CrossOrigin
     @PostMapping
     @Operation(summary = "Add a new product", description = "Add a new product and return the created product's data")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Product added successfully"),
-//            @ApiResponse(responseCode = "422", description = "Invalid product data provided")
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
     })
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody @Validated ProductDTO productDTO) {
         Product newProduct = productService.addProduct(productDTO.toModel());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(newProduct.getId())
@@ -74,10 +74,11 @@ public class ProductController {
     @CrossOrigin
     @Operation(summary = "Update product information by ID", description = "Update a product quantity, price and currency by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful")
+            @ApiResponse(responseCode = "200", description = "Operation successful"),
+            @ApiResponse(responseCode = "404", description = "The requested resource was not found")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ProductUpdateDTO> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateDTO productToUpdate) {
+    public ResponseEntity<ProductUpdateDTO> updateProduct(@PathVariable Long id, @Validated @RequestBody ProductUpdateDTO productToUpdate) {
         Product productUpdated = productService.updateProduct(id, productToUpdate.toModel());
         return ResponseEntity.ok(new ProductUpdateDTO(productUpdated));
     }
@@ -95,7 +96,8 @@ public class ProductController {
 
     @Operation(summary = "Get product total price converted to a chosen currency", description = "Get total price of your registered product converted to another coin")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful")
+            @ApiResponse(responseCode = "200", description = "Operation successful"),
+            @ApiResponse(responseCode = "404", description = "The requested resource was not found")
     })
     @CrossOrigin
     @GetMapping("/{id}/totalPrice/{targetCurrency}")
@@ -104,6 +106,5 @@ public class ProductController {
         BigDecimal totalPrice = productService.calculateTotalPrice(product, targetCurrency);
         return ResponseEntity.ok(totalPrice);
     }
-
 
 }

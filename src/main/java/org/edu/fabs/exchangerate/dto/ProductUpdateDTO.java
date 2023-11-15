@@ -1,12 +1,18 @@
 package org.edu.fabs.exchangerate.dto;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.Product;
 
 import java.math.BigDecimal;
 
 public record ProductUpdateDTO(
+        @Min(value = 1)
         Integer quantity,
+        @DecimalMin("0")
+        @Positive
         BigDecimal price,
         CurrencySymbol currency) {
 
