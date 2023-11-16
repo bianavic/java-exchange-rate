@@ -41,29 +41,8 @@ class ProductServiceTest {
     }
 
     /**
-
-     *     Product updateProduct(Long id, Product productToUpdate);
-     *     void deleteProduct(Long id);
-     *     BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency);
+     *     TODO BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency);
      */
-
-//    @BeforeEach
-//    void setUp() {
-//        var product1 = Product.builder()
-//                .id(1L)
-//                .name("Product 1")
-//                .description("Product description 1")
-//                .quantity(1)
-//                .price(new BigDecimal(100.00))
-//                .currency(CurrencySymbol.USD);
-//        var product2 = Product.builder()
-//                .id(2L)
-//                .name("Product 2")
-//                .description("Product description 2")
-//                .quantity(10)
-//                .price(new BigDecimal(700.00))
-//                .currency(CurrencySymbol.BRL);
-//    }
 
     @Test
     @Description("Test getAll() method")

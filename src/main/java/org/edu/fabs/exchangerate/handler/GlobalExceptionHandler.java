@@ -74,16 +74,6 @@ public class GlobalExceptionHandler extends RuntimeException {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public void handleResourceNotFound(HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.NOT_FOUND.value());
-    }
-
-//    @ExceptionHandler(ResourceAlreadyExistsException.class)
-//    public ResponseEntity<String> handleResourceAlreadyExists(ResourceAlreadyExistsException ex) {
-//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
-//    }
-
     @ExceptionHandler(value = { ResourceNotFoundException.class })
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
