@@ -21,6 +21,12 @@ Patterns: Singleton, Strategy, Facade
     <a alt="Swagger">
         <img src="https://img.shields.io/badge/Swagger-85EA2D?logoColor=white" />
     </a>
+    <a alt="Mockito">
+        <img src="https://img.shields.io/badge/Mockito-85EA2D?logoColor=white" />
+    </a>
+    <a alt="Rest-Assured">
+        <img src="https://img.shields.io/badge/Rest-Assured-85EA2D?logoColor=white" />
+    </a>
 </p>
 
 ## About this application
@@ -87,7 +93,7 @@ curl -X 'GET' \
 |:--------------|:---------|:------------------------------|
 | `base_code`   | `String` | **Required**. Código da moeda |
 
-###### Resposta da requisição 200 OK
+###### 200 OK
 ps: return all supported currencies from exchange rate api
 
 ``` json
@@ -118,7 +124,11 @@ ps: return all supported currencies from exchange rate api
  }
 }
 ```
+###### 400 BAD_REQUEST
 
+``` json
+Invalid currency code. Currency code must be a valid ISO 4217 code: QQQ
+```
 #### pair conversion
 
 ```bash
@@ -132,7 +142,7 @@ curl -X 'GET' \
 | `base_code`   | `String` | **Required**. Código da moeda |
 | `target_code` | `String` | **Required**. Código da moeda |
 
-###### HttpResponse 200 OK
+###### 200 OK
 
 ``` json
 {"base_code":"BRL","target_code":"USD","conversion_rate":0.2024,"time_last_update_utc":"Sun, 05 Nov 2023 00:00:01 +0000"}
@@ -151,7 +161,7 @@ curl -X 'GET' \
 | `target_code` | `String`     | **Required**. Código da moeda |
 | `amount`      | `BigDecimal` | **Required**. Código da moeda |
 
-###### HttpResponse 200 OK
+###### 200 OK
 
 ``` json
 {"base_code":"BRL","target_code":"USD","conversion_rate":0.2024,"conversion_result":202.4,"time_last_update_utc":"Sun, 05 Nov 2023 00:00:01 +0000"}
@@ -185,7 +195,7 @@ curl -X 'POST' \
 | `price`       | `BigDecimal` | **Required**. product price                               |
 | `currency`    | `BigDecimal` | **Required**. product currency will not be converted here |
 
-###### HttpResponse 200 OK
+###### 200 OK
 
 ``` json
 {
@@ -197,6 +207,15 @@ curl -X 'POST' \
   "currency": "USD"
 }
 ```
+###### 400 BAD_REQUEST
+
+``` json
+{
+  "status": 400,
+  "message": "{quantity=must be greater than 0, price=must be greater than 0, name=name is mandatory}",
+  "timeStamp": 1700157182686
+}
+```
 #### get all products
 
 ```bash
@@ -205,7 +224,7 @@ curl -X 'GET' \
   -H 'accept: */*'
 ```
 
-###### HttpResponse 200 OK
+###### 200 OK
 
 ``` json
 [
@@ -235,7 +254,7 @@ curl -X 'GET' \
   -H 'accept: */*'
 ```
 
-###### HttpResponse 200 OK
+###### 200 OK
 
 ``` json
 {
@@ -246,6 +265,11 @@ curl -X 'GET' \
   "price": 200,
   "currency": "ARS"
 }
+```
+###### 404 NOT_FOUND
+
+``` json
+Resource ID not found: 1
 ```
 #### update product by ID
 
@@ -267,7 +291,7 @@ curl -X 'PUT' \
 | `price`       | `BigDecimal` | **Required**. product price                               |
 | `currency`    | `BigDecimal` | **Required**. product currency will not be converted here |
 
-###### HttpResponse 200 OK
+###### 200 OK
 
 ``` json
 {
@@ -275,6 +299,26 @@ curl -X 'PUT' \
   "price": 99.99,
   "currency": "USD"
 }
+```
+
+###### 400 BAD_REQUEST
+
+``` json
+Invalid currency code. Currency code must be a valid ISO 4217 code: AR
+```
+###### 400 BAD_REQUEST
+
+``` json
+{
+  "status": 400,
+  "message": "{quantity=must be greater than or equal to 1, price=must be greater than or equal to 0}",
+  "timeStamp": 1700157002947
+}
+```
+###### 404 NOT_FOUND
+
+``` json
+Resource ID not found: 1
 ```
 #### delete product by ID
 
@@ -284,8 +328,12 @@ curl -X 'DELETE' \
   -H 'accept: */*'
 ```
 
-###### HttpResponse 200 OK
+###### 200 OK
+###### 404 NOT_FOUND
 
+``` json
+Resource ID not found: 1
+```
 #### convert total product price to supported currency
 
 ```bash
@@ -299,12 +347,17 @@ curl -X 'GET' \
 | `id`             | `Long`       | **Required**. product id      |
 | `targetCurrency` | `String`     | **Required**. currency symbol |
 
-###### HttpResponse 200 OK
+###### 200 OK
 
 ``` json
 4941.7
 ```
+###### 404 NOT_FOUND
 
+``` json
+can't parse JSON.  Raw result:
+Resource ID not found: 1
+```
 ## Swagger Documentation
 when running this application, you can test and visualize at:
 [Documentação do Swagger](http://localhost:8282/swagger-ui/index.html)
