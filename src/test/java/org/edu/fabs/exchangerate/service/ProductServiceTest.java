@@ -45,8 +45,8 @@ class ProductServiceTest {
      */
 
     @Test
-    @Description("Test getAll() method")
-    public void testGetAll() {
+    @Description("Should successfully retrieve all products")
+    public void shouldGetAllProducts() {
 
         List<Product> products = new ArrayList<>();
         products.add(new Product("Product 1", "Product description 1", 2, new BigDecimal(100.00), CurrencySymbol.USD));
@@ -62,35 +62,30 @@ class ProductServiceTest {
     }
 
     @Test
-    @Description("Test getById method when exists ID at database")
-    public void testGetByID() {
+    @Description("Should successfully retrieve a product by its ID")
+    public void shouldGetProductById() {
 
         Product product = new Product(1L, "Product 1", "Product description 1", 2, new BigDecimal(100.00), CurrencySymbol.USD);
-
         Mockito.when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
         Optional<Product> result = productService.getById(1L);
 
-        if (result.isPresent()) {
-            assertThat(result.get()).isEqualTo(product);
-        } else {
-            fail("Expected Product object but found empty Optional");
-        }
-
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get()).isEqualTo(product);
         // verify if repository method is called at least 1 time
         verify(productRepository, times(1)).findById(1L);
     }
 
     @Test
-    @Description("Test getById method when ID does not exists")
-    public void testGetByIDNoExistentID() {
+    @Description("Should throw ResourceNotFoundException when product with ID does not exist")
+    public void shouldThrowNotFoundExceptionForNonexistentProduct() {
 
         Long productId = 1L;
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> productService.getById(1L))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Resource ID not found " + productId)
+                .hasMessageContaining("Resource ID not found: " + productId)
                 .extracting("status")
                 .isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -99,8 +94,8 @@ class ProductServiceTest {
     }
 
     @Test
-    @Description("Test successfully add new Product")
-    public void testAddProduct() {
+    @Description("Should successfully add a new product")
+    public void shouldAddNewProduct() {
 
         Product product = new Product(1L, "Product 1", "Product description 1", 2, new BigDecimal(100.00), CurrencySymbol.USD);
         Mockito.when(productRepository.save(product)).thenReturn(product);
@@ -118,8 +113,8 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Test successfully updating product information by ID")
-    public void testUpdateProduct() {
+    @DisplayName("Should successfully update product information by ID")
+    public void shouldUpdateProduct() {
         Long productId = 1L;
         Product product = new Product(productId, "Product 1", "Product description 1", 2, new BigDecimal(100.00), CurrencySymbol.USD);
         ProductUpdateDTO productToUpdateDTO = new ProductUpdateDTO(3, new BigDecimal(150.00), CurrencySymbol.EUR);
@@ -144,7 +139,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @Description("Test delete product by ID")
+    @Description("Should delete product by ID")
     public void testDeleteByID() {
 
         List<Product> products = new ArrayList<>();
