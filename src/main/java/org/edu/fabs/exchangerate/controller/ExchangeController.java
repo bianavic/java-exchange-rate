@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
+import org.edu.fabs.exchangerate.handler.InvalidCurrencyCodeException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,11 @@ public class ExchangeController {
     @CrossOrigin
     @GetMapping("latest/{baseCode}")
     public String getLatest(@PathVariable("baseCode") String baseCode) {
-        return exchangeFeignClient.getSupportedCurrencies(baseCode);
+        try {
+            return exchangeFeignClient.getSupportedCurrencies(baseCode);
+        } catch (Exception e) {
+            throw new InvalidCurrencyCodeException(e.getMessage(), baseCode);
+        }
     }
 
     @Operation(summary = "Get exchange rate between the codes and the conversion of the optional amount", description = "the exchange rate from your base code to the target currency you supplied, as well as a conversion of the amount you supplied")

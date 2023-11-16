@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import feign.FeignException;
 import org.apache.commons.lang3.EnumUtils;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
-import org.edu.fabs.exchangerate.handler.ConversionException;
 import org.edu.fabs.exchangerate.handler.InvalidCurrencyCodeException;
 import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
@@ -58,9 +57,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(id)));
 
         if (isValidCurrencyType(productToUpdate.getCurrency().getName())) {
-            throw new InvalidCurrencyCodeException("Invalid currency type passed");
+            throw new InvalidCurrencyCodeException("Invalid currency type passed", productToUpdate.getCurrency().getName());
         }
-
         if (optionalProduct.isPresent()) {
             Product productDB = optionalProduct.get();
             productDB.setQuantity(productToUpdate.getQuantity());
@@ -82,13 +80,12 @@ public class ProductServiceImpl implements ProductService {
         } else {
             throw new ResourceNotFoundException(id);
         }
-
     }
 
     public BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency) {
         BigDecimal conversionRate = BigDecimal.ZERO;
         if (isValidCurrencyType(targetCurrency.getName())) {
-            throw new InvalidCurrencyCodeException("Invalid currency type passed");
+            throw new InvalidCurrencyCodeException("Invalid currency type passed", targetCurrency.getName());
         }
         try {
             String response = exchangeFeignClient.getPairConversion(product.getCurrency(), targetCurrency);
@@ -96,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
             ExchangeRateResponse exchangeRateResponse = gson.fromJson(response, ExchangeRateResponse.class);
             conversionRate = exchangeRateResponse.getConversion_rate();
         } catch (FeignException e) {
-            throw new ConversionException("Failed to get conversion rate");
+            throw new InvalidCurrencyCodeException("Conversion rate not found for currency pair: ", product.getCurrency() + ", " + targetCurrency);
         }
         return product.getPrice().multiply(new BigDecimal(product.getQuantity())).multiply(conversionRate);
     }

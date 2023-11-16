@@ -100,7 +100,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "The requested resource was not found")
     })
     @CrossOrigin
-    @GetMapping("/{id}/totalPrice/{targetCurrency}")
+    @GetMapping(value = "/{id}/totalPrice/{targetCurrency}", produces= "application/json")
     public ResponseEntity<BigDecimal> getTotalPrice(@PathVariable Long id, @PathVariable CurrencySymbol targetCurrency) {
         Product product = productService.getById(id).orElseThrow();
         BigDecimal totalPrice = productService.calculateTotalPrice(product, targetCurrency);

@@ -30,7 +30,7 @@ public enum CurrencySymbol {
                 return symbol;
             }
         }
-        throw new InvalidCurrencyCodeException("Invalid currency code: " + name);
+        throw new InvalidCurrencyCodeException("Invalid currency code: ", name);
     }
 
     @JsonValue
