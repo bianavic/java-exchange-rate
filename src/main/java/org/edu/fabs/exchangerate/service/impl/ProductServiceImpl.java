@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
 
     public BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency) {
         BigDecimal conversionRate = BigDecimal.ZERO;
-        if (isValidCurrencyType(targetCurrency.getName())) {
+        if (!isValidCurrencyType(targetCurrency.getName())) {
             throw new InvalidCurrencyCodeException("Invalid currency type passed", targetCurrency.getName());
         }
         try {
@@ -93,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
             ExchangeRateResponse exchangeRateResponse = gson.fromJson(response, ExchangeRateResponse.class);
             conversionRate = exchangeRateResponse.getConversion_rate();
         } catch (FeignException e) {
-            throw new InvalidCurrencyCodeException("Conversion rate not found for currency pair: ", product.getCurrency() + ", " + targetCurrency);
+            throw new InvalidCurrencyCodeException("Conversion rate not found for currency pair: ", product.getCurrency() + ", " + targetCurrency.getName());
         }
         return product.getPrice().multiply(new BigDecimal(product.getQuantity())).multiply(conversionRate);
     }

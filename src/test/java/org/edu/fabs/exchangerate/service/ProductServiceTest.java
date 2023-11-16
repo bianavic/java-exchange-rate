@@ -1,8 +1,11 @@
 package org.edu.fabs.exchangerate.service;
 
+import com.google.gson.Gson;
 import org.edu.fabs.exchangerate.dto.ProductUpdateDTO;
+import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
+import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.repository.ProductRepository;
 import org.edu.fabs.exchangerate.service.impl.ProductServiceImpl;
@@ -17,12 +20,15 @@ import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -34,14 +40,13 @@ class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private ExchangeFeignClient exchangeFeignClient;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-    /**
-     *     TODO BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency);
-     */
 
     @Test
     @Description("Should successfully retrieve all products")
@@ -166,6 +171,46 @@ class ProductServiceTest {
         verify(productRepository, times(1)).findAll();
         verify(productRepository, times(1)).findById(1L);
         verify(productRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("Should successfully get product total price in a different currency")
+    public void shouldCalculateTotalPriceSuccessfully() throws Exception {
+        Product product = Product.builder()
+                .id(1L)
+                .name("Product 1")
+                .description("Product description 1")
+                .quantity(2)
+                .price(new BigDecimal("100.00"))
+                .currency(CurrencySymbol.USD)
+                .build();
+        BigDecimal conversionRate = new BigDecimal(0.98);
+        BigDecimal price = product.getPrice();
+        BigDecimal quantity = new BigDecimal(product.getQuantity());
+        BigDecimal expectedTotalPrice = price.multiply(quantity).multiply(conversionRate);
+        expectedTotalPrice = expectedTotalPrice.setScale(2, RoundingMode.HALF_UP);
+
+        ExchangeRateResponse exchangeRateResponse = new ExchangeRateResponse("USD", "EUR", conversionRate);
+        exchangeRateResponse.setConversion_result(expectedTotalPrice);
+
+        Mockito.when(exchangeFeignClient.getPairConversion(CurrencySymbol.USD, CurrencySymbol.EUR)).thenReturn(new Gson().toJson(exchangeRateResponse));
+
+        assertEquals(new BigDecimal("196.00"), expectedTotalPrice);
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when invalid currency type is provided")
+    void shouldThrowIllegalArgumentException() throws Exception {
+        Product product = Product.builder()
+                .id(1L)
+                .name("Product 1")
+                .description("Product description 1")
+                .quantity(2)
+                .price(new BigDecimal("100.00"))
+                .currency(CurrencySymbol.USD)
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> productService.calculateTotalPrice(product, CurrencySymbol.valueOf("XYZ")));
     }
 
 }
