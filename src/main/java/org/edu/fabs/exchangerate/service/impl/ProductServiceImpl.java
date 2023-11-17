@@ -56,9 +56,10 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> optionalProduct = Optional.ofNullable(this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id)));
 
-        if (isValidCurrencyType(productToUpdate.getCurrency().getName())) {
-            throw new InvalidCurrencyCodeException("Invalid currency type passed", productToUpdate.getCurrency().getName());
-        }
+        validateCurrencySymbol(productToUpdate.getCurrency());
+//        if (isValidCurrencyType(productToUpdate.getCurrency().getName())) {
+//            throw new InvalidCurrencyCodeException("Invalid currency type passed", productToUpdate.getCurrency().getName());
+//        }
         if (optionalProduct.isPresent()) {
             Product productDB = optionalProduct.get();
             productDB.setQuantity(productToUpdate.getQuantity());
@@ -83,23 +84,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public BigDecimal calculateTotalPrice(Product product, CurrencySymbol targetCurrency) {
-        BigDecimal conversionRate = BigDecimal.ZERO;
-        if (!isValidCurrencyType(targetCurrency.getName())) {
-            throw new InvalidCurrencyCodeException("Invalid currency type passed", targetCurrency.getName());
-        }
-        try {
-            String response = exchangeFeignClient.getPairConversion(product.getCurrency(), targetCurrency);
-            Gson gson = new Gson();
-            ExchangeRateResponse exchangeRateResponse = gson.fromJson(response, ExchangeRateResponse.class);
-            conversionRate = exchangeRateResponse.getConversion_rate();
-        } catch (FeignException e) {
-            throw new InvalidCurrencyCodeException("Conversion rate not found for currency pair: ", product.getCurrency() + ", " + targetCurrency.getName());
-        }
+        validateCurrencySymbol(targetCurrency);
+
+        ExchangeRateResponse exchangeRateResponse = fetchExchangeRate(product.getCurrency(), targetCurrency);
+        BigDecimal conversionRate = exchangeRateResponse.getConversion_rate();
+
         return product.getPrice().multiply(new BigDecimal(product.getQuantity())).multiply(conversionRate);
     }
 
-    private boolean isValidCurrencyType(String currencyType) {
-        return !EnumUtils.isValidEnum(CurrencySymbol.class, currencyType);
+    private void validateCurrencySymbol(CurrencySymbol targetCurrency) {
+        if (!EnumUtils.isValidEnum(CurrencySymbol.class, targetCurrency.getName())) {
+            throw new InvalidCurrencyCodeException("Invalid currency type passed: ", targetCurrency.getName());
+        }
+    }
+
+    private ExchangeRateResponse fetchExchangeRate(CurrencySymbol baseCurrency, CurrencySymbol targetCurrency) {
+        try {
+            String response = exchangeFeignClient.getPairConversion(baseCurrency, targetCurrency);
+            Gson gson = new Gson();
+            return gson.fromJson(response, ExchangeRateResponse.class);
+        } catch (FeignException e) {
+            throw new InvalidCurrencyCodeException("Conversion rate not found for currency pair: ", baseCurrency.getName() + ", " + targetCurrency.getName());
+        }
     }
 
 }
