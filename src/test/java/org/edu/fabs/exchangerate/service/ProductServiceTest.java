@@ -1,11 +1,13 @@
 package org.edu.fabs.exchangerate.service;
 
 import com.google.gson.Gson;
+import feign.FeignException;
 import org.edu.fabs.exchangerate.dto.ProductUpdateDTO;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
+import org.edu.fabs.exchangerate.handler.InvalidCurrencyCodeException;
 import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
-import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
+import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.repository.ProductRepository;
 import org.edu.fabs.exchangerate.service.impl.ProductServiceImpl;
@@ -20,7 +22,6 @@ import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +30,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @DisplayName("Product Service Tests")
 class ProductServiceTest {
@@ -174,28 +177,58 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Should successfully get product total price in a different currency")
-    public void shouldCalculateTotalPriceSuccessfully() throws Exception {
+    @DisplayName("Should calculate the total price in the target currency correctly")
+    void shouldCalculateTotalPriceCorrectly() {
         Product product = Product.builder()
                 .id(1L)
                 .name("Product 1")
                 .description("Product description 1")
                 .quantity(2)
-                .price(new BigDecimal("100.00"))
+                .price(new BigDecimal("10.00"))
                 .currency(CurrencySymbol.USD)
                 .build();
-        BigDecimal conversionRate = new BigDecimal(0.98);
-        BigDecimal price = product.getPrice();
-        BigDecimal quantity = new BigDecimal(product.getQuantity());
-        BigDecimal expectedTotalPrice = price.multiply(quantity).multiply(conversionRate);
-        expectedTotalPrice = expectedTotalPrice.setScale(2, RoundingMode.HALF_UP);
+        CurrencySymbol targetCurrency = CurrencySymbol.EUR;
 
-        ExchangeRateResponse exchangeRateResponse = new ExchangeRateResponse("USD", "EUR", conversionRate);
-        exchangeRateResponse.setConversion_result(expectedTotalPrice);
+        ExchangeRateResponse exchangeRateResponse = new ExchangeRateResponse(CurrencySymbol.USD, CurrencySymbol.EUR);
+        exchangeRateResponse.setConversion_rate(new BigDecimal("0.85"));
 
-        Mockito.when(exchangeFeignClient.getPairConversion(CurrencySymbol.USD, CurrencySymbol.EUR)).thenReturn(new Gson().toJson(exchangeRateResponse));
+        when(exchangeFeignClient.getPairConversion(any(CurrencySymbol.class), any(CurrencySymbol.class)))
+                .thenReturn("{ \"base_code\": \"USD\", \"target_code\": \"EUR\", \"conversion_rate\": 0.85 }");
 
-        assertEquals(new BigDecimal("196.00"), expectedTotalPrice);
+        BigDecimal totalPrice = productService.calculateTotalPrice(product, targetCurrency);
+
+        BigDecimal expectedTotalPrice = new BigDecimal("2").multiply(new BigDecimal("10.00")).multiply(new BigDecimal("0.85"));
+        assertEquals(expectedTotalPrice, totalPrice);
+    }
+
+    @Test
+    @DisplayName("Should fetch exchange rate successfully")
+    public void shouldFetchExchangeRateSuccessfully() throws Exception {
+        CurrencySymbol baseCurrency = CurrencySymbol.USD;
+        CurrencySymbol targetCurrency = CurrencySymbol.EUR;
+        BigDecimal conversionRate = new BigDecimal("0.98");
+
+        ExchangeRateResponse mockResponse = new ExchangeRateResponse("USD", "EUR", conversionRate);
+        String mockJsonResponse = new Gson().toJson(mockResponse);
+
+        Mockito.when(exchangeFeignClient.getPairConversion(baseCurrency, targetCurrency)).thenReturn(mockJsonResponse);
+
+        ExchangeRateResponse result = productService.fetchExchangeRate(baseCurrency, targetCurrency);
+
+        assertEquals(mockResponse, result);
+        verify(exchangeFeignClient, times(1)).getPairConversion(baseCurrency, targetCurrency);
+    }
+
+    @Test
+    @DisplayName("Should throw InvalidCurrencyCodeException when FeignException is thrown")
+    public void shouldThrowInvalidCurrencyCodeExceptionWhenFeignExceptionIsThrown() throws Exception {
+        CurrencySymbol baseCurrency = CurrencySymbol.USD;
+        CurrencySymbol targetCurrency = CurrencySymbol.EUR;
+
+        Mockito.when(exchangeFeignClient.getPairConversion(baseCurrency, targetCurrency)).thenThrow(FeignException.class);
+
+        assertThrows(InvalidCurrencyCodeException.class, () -> productService.fetchExchangeRate(baseCurrency, targetCurrency));
+        verify(exchangeFeignClient, times(1)).getPairConversion(baseCurrency, targetCurrency);
     }
 
     @Test

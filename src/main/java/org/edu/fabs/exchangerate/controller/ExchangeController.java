@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.handler.InvalidCurrencyCodeException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
-import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
+import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

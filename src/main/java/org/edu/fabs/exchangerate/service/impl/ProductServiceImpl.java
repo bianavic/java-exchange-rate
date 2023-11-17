@@ -7,7 +7,7 @@ import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.handler.InvalidCurrencyCodeException;
 import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
-import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
+import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.repository.ProductRepository;
 import org.edu.fabs.exchangerate.service.ProductService;
@@ -57,9 +57,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(id)));
 
         validateCurrencySymbol(productToUpdate.getCurrency());
-//        if (isValidCurrencyType(productToUpdate.getCurrency().getName())) {
-//            throw new InvalidCurrencyCodeException("Invalid currency type passed", productToUpdate.getCurrency().getName());
-//        }
+
         if (optionalProduct.isPresent()) {
             Product productDB = optionalProduct.get();
             productDB.setQuantity(productToUpdate.getQuantity());
@@ -98,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private ExchangeRateResponse fetchExchangeRate(CurrencySymbol baseCurrency, CurrencySymbol targetCurrency) {
+    public ExchangeRateResponse fetchExchangeRate(CurrencySymbol baseCurrency, CurrencySymbol targetCurrency) {
         try {
             String response = exchangeFeignClient.getPairConversion(baseCurrency, targetCurrency);
             Gson gson = new Gson();

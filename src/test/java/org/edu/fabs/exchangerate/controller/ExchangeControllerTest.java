@@ -4,6 +4,8 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +31,26 @@ class ExchangeControllerTest {
     @Autowired
     private ExchangeFeignClient exchangeFeignClient;
 
+    private WireMockServer wireMockServer;
+
+    @BeforeEach
+    public void setUp() {
+        wireMockServer = new WireMockServer(options().port(8282));
+        wireMockServer.start();
+
+        WireMock.configureFor("localhost", wireMockServer.port());
+    }
+
+    @AfterEach
+    public void tearDown() {
+        wireMockServer.stop();
+    }
+
     @Test
     @DisplayName("Should return all supported currencies when make request to ExchangeRate API")
     void getLatest() {
 
         String mockedResponse = MOCKED_SUPPORTED_CURRENCIES_RESPONSE;
-
-        WireMockServer wireMockServer = new WireMockServer(options().port(8282));
-        wireMockServer.start();
 
         WireMock.configureFor("localhost", wireMockServer.port());
         WireMock.stubFor(
@@ -49,17 +63,13 @@ class ExchangeControllerTest {
         );
         String actualResponse = exchangeFeignClient.getSupportedCurrencies("BRL");
         assertEquals(mockedResponse, actualResponse);
-
-        wireMockServer.stop();
     }
 
     @Test
     @DisplayName("Should return the exchange rate from a base code to the other currency supplied")
-    void exchangeAmount() {
+    void exchangePair() {
 
         String mockedResponse = MOCKED_PAIR_CONVERSION_RESPONSE;
-        WireMockServer wireMockServer = new WireMockServer(options().port(8282));
-        wireMockServer.start();
 
         WireMock.configureFor("localhost", wireMockServer.port());
         WireMock.stubFor(
@@ -72,17 +82,13 @@ class ExchangeControllerTest {
         );
         String actualResponse = exchangeFeignClient.getPairConversion(CurrencySymbol.BRL, CurrencySymbol.EUR);
         assertEquals(mockedResponse, actualResponse);
-
-        wireMockServer.stop();
     }
 
     @Test
     @DisplayName("Should return the exchange rate from a base code to the other currency supplied, as well as a conversion of the amount supplied")
-    void exchangePair() {
+    void exchangePairAmount() {
 
         String mockedResponse = MOCKED_PAIR_AMOUNT_RESPONSE;
-        WireMockServer wireMockServer = new WireMockServer(options().port(8282));
-        wireMockServer.start();
 
         WireMock.configureFor("localhost", wireMockServer.port());
         WireMock.stubFor(
@@ -95,8 +101,6 @@ class ExchangeControllerTest {
         );
         String actualResponse = exchangeFeignClient.getAmountConversion(BASE_CODE, TARGET_CODE, BigDecimal.valueOf(1000));
         assertEquals(mockedResponse, actualResponse);
-
-        wireMockServer.stop();
     }
 
 }
