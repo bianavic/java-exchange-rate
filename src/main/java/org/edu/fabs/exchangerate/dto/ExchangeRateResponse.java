@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ExchangeRateResponse {
 
     @JsonProperty("base_code")
@@ -46,4 +48,5 @@ public class ExchangeRateResponse {
         this.target_code = target_code;
         this.conversion_result = amount;
     }
+
 }
