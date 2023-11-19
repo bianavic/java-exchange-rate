@@ -362,6 +362,11 @@ curl -X 'GET' \
 can't parse JSON.  Raw result:
 Resource ID not found: 1
 ```
+
+## Code Coverage Report
+![code coverage report](assets/report.png "code coverage report - 75.3% method")
+
+
 ## Swagger Documentation
 when running this application, you can test and visualize at:
 [Documentação do Swagger](http://localhost:8282/swagger-ui/index.html)

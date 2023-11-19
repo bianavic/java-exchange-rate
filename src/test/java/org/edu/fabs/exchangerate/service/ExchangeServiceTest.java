@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.google.gson.Gson;
 import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
+import org.edu.fabs.exchangerate.handler.InvalidAmountException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.service.impl.ExchangeServiceImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -23,6 +24,7 @@ import java.math.RoundingMode;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -69,6 +71,17 @@ class ExchangeServiceTest {
         String actualResponse = exchangeService.getAmountConversion(base_code, target_code, amount);
 
         assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("Should return InvalidAmountException when an invalid amount is supplied")
+    void testGetAmountConversionException() {
+
+        CurrencySymbol base_code = CurrencySymbol.USD;
+        CurrencySymbol target_code = CurrencySymbol.EUR;
+        BigDecimal invalidAmount = new BigDecimal(-100);
+
+        assertThrows(InvalidAmountException.class, () -> exchangeService.getAmountConversion(base_code, target_code, invalidAmount));
     }
 
     @Test

@@ -24,7 +24,9 @@ public class ExchangeServiceImpl implements ExchangeService {
     public String getAmountConversion(CurrencySymbol base_code, CurrencySymbol target_code, BigDecimal amount) {
         if (isValidAmount(amount)) {
             return exchangeFeignClient.getAmountConversion(base_code.getName(), target_code.getName(), amount.setScale(2, RoundingMode.HALF_EVEN));
-        } else throw new InvalidAmountException("Invalid amount: ", amount);
+        } else {
+            throw new InvalidAmountException("Invalid amount: ", amount);
+        }
     }
 
     @Override
