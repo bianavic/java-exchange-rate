@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -32,5 +34,13 @@ public class Product {
     @Column(precision = 13, scale = 2)
     private BigDecimal price;
     private CurrencySymbol currency;
+
+    public Product(String name, String description, int quantity, BigDecimal price, CurrencySymbol currency) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.price = price;
+        this.currency = currency;
+    }
 
 }

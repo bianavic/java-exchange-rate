@@ -3,21 +3,27 @@ package org.edu.fabs.exchangerate.dto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
 import org.edu.fabs.exchangerate.model.Product;
 
 import java.math.BigDecimal;
 
 public record ProductDTO(
-        @NotBlank
+        @NotBlank(message = "name is mandatory")
+        @NotNull(message = "name is mandatory")
+        @Size(min = 3, max = 50, message = "name must have at least 3 and max 50 characters")
         String name,
-        @NotBlank
         String description,
-        @NotNull
+        @NotNull(message = "quantity is mandatory")
+        @Positive
         Integer quantity,
-        @NotNull @DecimalMin("0")
+        @NotNull(message = "price is mandatory")
+        @Positive
+        @DecimalMin("0")
         BigDecimal price,
-        @NotNull
+        @NotNull(message = "currency is mandatory")
         CurrencySymbol currency) {
 
     public ProductDTO(Product model) {

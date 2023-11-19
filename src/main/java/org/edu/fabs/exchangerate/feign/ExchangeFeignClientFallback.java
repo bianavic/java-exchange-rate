@@ -1,7 +1,7 @@
 package org.edu.fabs.exchangerate.feign;
 
+import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
-import org.edu.fabs.exchangerate.model.ExchangeRateResponse;
 
 import java.math.BigDecimal;
 

@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigDecimal;
 
-@FeignClient(name = "exchangeapi", url = "${exchange.api}", fallback = ExchangeFeignClientFallback.class)
+@FeignClient(name = "exchangeapi",
+        url = "${exchange.api}",
+        fallback = ExchangeFeignClientFallback.class,
+        configuration = FeignClientConfiguration.class)
 public interface ExchangeFeignClient {
 
     @GetMapping("/latest/{code}")
