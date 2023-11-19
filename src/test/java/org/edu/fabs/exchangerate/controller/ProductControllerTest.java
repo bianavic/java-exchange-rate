@@ -1,10 +1,10 @@
 package org.edu.fabs.exchangerate.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.dto.ProductUpdateDTO;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
-import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.repository.ProductRepository;
 import org.edu.fabs.exchangerate.service.ProductService;

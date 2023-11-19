@@ -2,12 +2,12 @@ package org.edu.fabs.exchangerate.service;
 
 import com.google.gson.Gson;
 import feign.FeignException;
+import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.dto.ProductUpdateDTO;
 import org.edu.fabs.exchangerate.feign.ExchangeFeignClient;
 import org.edu.fabs.exchangerate.handler.InvalidCurrencyCodeException;
 import org.edu.fabs.exchangerate.handler.ResourceNotFoundException;
 import org.edu.fabs.exchangerate.model.CurrencySymbol;
-import org.edu.fabs.exchangerate.dto.ExchangeRateResponse;
 import org.edu.fabs.exchangerate.model.Product;
 import org.edu.fabs.exchangerate.repository.ProductRepository;
 import org.edu.fabs.exchangerate.service.impl.ProductServiceImpl;
@@ -140,7 +140,6 @@ class ProductServiceTest {
                 .hasFieldOrPropertyWithValue("price", new BigDecimal(150.00))
                 .hasFieldOrPropertyWithValue("currency", CurrencySymbol.EUR);
 
-        // Verify repository method calls
         verify(productRepository, times(1)).findById(productId);
         verify(productRepository, times(1)).save(product);
     }
