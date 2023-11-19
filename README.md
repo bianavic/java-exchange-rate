@@ -166,7 +166,11 @@ curl -X 'GET' \
 ``` json
 {"base_code":"BRL","target_code":"USD","conversion_rate":0.2024,"conversion_result":202.4,"time_last_update_utc":"Sun, 05 Nov 2023 00:00:01 +0000"}
 ```
+###### 400 BAD_REQUEST
 
+``` json
+Invalid amount: -1
+```
 ---
 ### Product Endpoints
 
