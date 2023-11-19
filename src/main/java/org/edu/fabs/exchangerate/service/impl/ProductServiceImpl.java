@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 
     private void validateCurrencySymbol(CurrencySymbol targetCurrency) {
         if (!EnumUtils.isValidEnum(CurrencySymbol.class, targetCurrency.getName())) {
-            throw new InvalidCurrencyCodeException("Invalid currency type passed: ", targetCurrency.getName());
+            throw new InvalidCurrencyCodeException("Invalid currency code. Currency code must be a valid ISO 4217 code: ", targetCurrency.getName());
         }
     }
 

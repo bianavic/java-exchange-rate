@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -53,13 +54,17 @@ public class GlobalExceptionHandler extends RuntimeException {
     @ExceptionHandler(value = {InvalidCurrencyCodeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleInvalidCurrencyCode(InvalidCurrencyCodeException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        String invalidCode = ex.getInvalidCode();
+        String errorMessage = "Invalid currency code. Currency code must be a valid ISO 4217 code: " + invalidCode;
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {ConversionException.class})
+    @ExceptionHandler(value = {InvalidAmountException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleConversionException(ConversionException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> handleConversionException(InvalidAmountException ex) {
+        BigDecimal invalidAmount = ex.getInvalidAmount();
+        String errorMessage = "Invalid amount: " + invalidAmount;
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { ResourceNotFoundException.class })
