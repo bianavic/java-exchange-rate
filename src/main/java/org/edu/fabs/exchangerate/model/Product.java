@@ -16,7 +16,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table
+@Table(name = "tb_products")
 @Data
 @Getter
 @Setter

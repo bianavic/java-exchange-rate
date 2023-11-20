@@ -13,7 +13,7 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Table
+@Table(name = "tb_exchange_rates")
 @Entity
 @ToString
 public class ExchangeRate {
