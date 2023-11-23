@@ -3,6 +3,7 @@ package org.edu.fabs.exchangerate.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.edu.fabs.exchangerate.dto.ProductDTO;
@@ -28,8 +29,9 @@ import java.net.URI;
 import java.util.Optional;
 
 @Tag(name = "Product Controller", description = "RESTFul API for managing products.")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("products")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
 
