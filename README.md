@@ -43,7 +43,8 @@ This API is for consultation only; selecting the currency at the time of the inq
 However, this application also allows you to check the current exchange rate based on the available currencies, data sourced from the exchange-rate API.
 
 
-> ### Ready to Access and Test
+### Ready to be accessed and tested
+obs: when the free trial of the Railway platform ends, the link will be deactivated. in this case, it will be necessary to run the application to access the Swagger documentation
 > https://exchange-rate.up.railway.app/swagger-ui/index.html
 ---
 
